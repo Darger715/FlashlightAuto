@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainScreenActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/dark_red">
 
     <Button
         android:id="@+id/mainScreenActivity_button_flashlight"
