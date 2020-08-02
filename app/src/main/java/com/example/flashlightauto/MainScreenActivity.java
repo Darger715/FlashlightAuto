@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,7 +22,7 @@ public class MainScreenActivity extends AppCompatActivity {
     //true = on, false = off
     boolean check_button;
     Camera.Parameters parameters;
-    Camera camera;
+    private Camera camera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,65 +49,22 @@ public class MainScreenActivity extends AppCompatActivity {
                 }
             }
         });
-    }
 
 
+        boolean isCameraFlash = getApplicationContext().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
-
-
-
-
-    private void showCameraAlert() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.error_title)
-                .setMessage(R.string.error_text)
-                .setPositiveButton(R.string.exit_message, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+        camera = Camera.open();
     }
 
 
     private void setFlashLigthOn() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-           //   if (camera != null) {
-           //       parameters = camera.getParameters();
-
-           //       if (parameters != null) {
-           //           List supportedFlashModes = parameters.getSupportedFlashModes();
-
-
-           //           if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
-           //               parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-           //           }
-
-           //           try {
-           //               camera.setPreviewTexture(new SurfaceTexture(0));
-           //           } catch (IOException e) {
-           //               e.printStackTrace();
-           //           }
-           //       }
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-            camera.setParameters(parameters);
-            }
-
-        }).start();
-    }
-
-
-    private void setFlashLightOff() {
+        Log.e("setFlashLightOn", "CAMERA: " + camera);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 if (camera != null) {
+
                     parameters = camera.getParameters();
 
                     if (parameters != null) {
@@ -119,14 +77,41 @@ public class MainScreenActivity extends AppCompatActivity {
                         } else camera = null;
 
                         if (camera != null) {
-                            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                             camera.setParameters(parameters);
-                            camera.stopPreview();
+                            camera.startPreview();
+                            try {
+                                camera.setPreviewTexture(new SurfaceTexture(0));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
             }
         }).start();
+    }
+
+
+    private void setFlashLightOff() {
+        Log.e("setFlashLightOff", "CAMERA: " + camera);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (camera != null) {
+
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    camera.setParameters(parameters);
+                    camera.stopPreview();
+                }
+            }
+        }).start();
+    }
+
+    private void releaseCamera() {
+        if (camera != null) {
+            camera.release();
+            camera = null;
+        }
     }
 }
 
