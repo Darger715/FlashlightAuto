@@ -50,7 +50,6 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-
         boolean isCameraFlash = getApplicationContext().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
