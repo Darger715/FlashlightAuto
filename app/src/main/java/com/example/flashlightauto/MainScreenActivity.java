@@ -3,7 +3,10 @@ package com.example.flashlightauto;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
@@ -24,6 +27,7 @@ public class MainScreenActivity extends AppCompatActivity {
     boolean check_button;
     Camera.Parameters parameters;
     private Camera camera;
+    boolean check_service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,37 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
+        //запуск Сервиса
+        (findViewById(R.id.mainScreenActivity_button_turnOnService)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean flag = check_service;
+                startService(new Intent(MainScreenActivity.this,CheckScreenService.class));
+            check_service = true;
+            if(flag != check_service)
+            {
+                Intent toCheckScreenService =  new Intent(MainScreenActivity.this,CheckScreenService.class);
+                toCheckScreenService.putExtra("1",check_service);
+                //startActivity(toCheckScreenService);
+
+            }
+            }
+        });
+
+        //выключение Сервиса
+        (findViewById(R.id.mainScreenActivity_button_turnOffService)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean flag = check_service;
+                stopService(new Intent(MainScreenActivity.this,CheckScreenService.class));
+                check_service = false;
+                if(flag != check_service)
+                {
+                    Intent toCheckScreenService =  new Intent(MainScreenActivity.this,CheckScreenService.class);
+                    toCheckScreenService.putExtra("1",check_service);
+                    //startActivity(toCheckScreenService);
+            }}
+        });
         boolean isCameraFlash = getApplicationContext().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
@@ -61,7 +96,6 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
     private void setFlashLigthOn() {
-        Log.e("setFlashLightOn", "CAMERA: " + camera);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -95,7 +129,6 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
     private void setFlashLightOff() {
-        Log.e("setFlashLightOff", "CAMERA: " + camera);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -117,3 +150,9 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 }
 
+class BootBroadcast extends BroadcastReceiver{
+    @Override
+public void onReceive(Context context, Intent intent){
+        context.startService(new Intent(context, CheckScreenService.class));
+    }
+}

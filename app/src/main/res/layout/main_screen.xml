@@ -15,6 +15,24 @@
         android:id="@+id/mainScreenActivity_button_flashlight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:background="@drawable/flashlight_off"/>
+
+    <Button
+        android:id="@+id/mainScreenActivity_button_turnOnService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/mainScreenActivity_button_flashlight"
+        android:text="ON"
+        android:textColor="@color/colorPrimary"/>
+
+    <Button
+        android:id="@+id/mainScreenActivity_button_turnOffService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/mainScreenActivity_button_flashlight"
+        android:layout_alignParentRight="true"
+        android:text="OFF"
+        android:textColor="@color/colorPrimary"/>
 
 </RelativeLayout>
