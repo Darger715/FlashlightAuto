@@ -32,7 +32,6 @@ public class MainScreenActivity extends AppCompatActivity {
     public static Camera.Parameters parameters;
     public static Camera camera;
     private BroadcastReceiver mReceiver = null;
-    boolean check_flashlight;
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -95,12 +94,31 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // only when screen turns on
-        button_on_off.setBackgroundResource(R.drawable.flashlight_off);
+        if (!check_button) {
+            button_on_off.setBackgroundResource(R.drawable.flashlight_off);
+        }
+        if (check_button) {
+            button_on_off.setBackgroundResource(R.drawable.flashlight_on);
+        }
+
         if (!ScreenReceiver.wasScreenOn) {
             // this is when onResume() is called due to a screen state change
             Log.e("MainScreenActivity", "SCREEN TURNED ON");
+
             MainScreenActivity.setFlashLightOff();
-            check_button = true;
+            /*if(!check_button) {
+                Log.e("MainScreenActivity","check_button: "+check_button);
+                check_button = true;
+
+
+            }
+            if(check_button)
+            {
+                Log.e("MainScreenActivity","check_button: "+check_button);
+               check_button = false;
+
+                MainScreenActivity.setFlashLigthOn();
+            }*/
         }
     }
 
@@ -153,9 +171,11 @@ public class MainScreenActivity extends AppCompatActivity {
             public void run() {
                 if (camera != null) {
 
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    camera.setParameters(parameters);
-                    camera.stopPreview();
+                    if (!parameters.equals(Camera.Parameters.FLASH_MODE_OFF)) {
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        camera.setParameters(parameters);
+                        camera.stopPreview();
+                    }
                 }
             }
         }).start();

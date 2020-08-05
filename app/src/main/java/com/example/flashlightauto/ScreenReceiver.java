@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class ScreenReceiver extends BroadcastReceiver{
+public class ScreenReceiver extends BroadcastReceiver {
 
     public static boolean wasScreenOn = true;
 
@@ -21,9 +21,20 @@ public class ScreenReceiver extends BroadcastReceiver{
         //экран включён
         else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             //todo
-           MainScreenActivity.setFlashLightOff();
+            MainScreenActivity.setFlashLightOff();
             Log.e("ScreenReceiver", "Экран включился");
             wasScreenOn = true;
+            if (!MainScreenActivity.check_button) {
+                Log.e("MainScreenActivity", "check_button: " + MainScreenActivity.check_button);
+                MainScreenActivity.check_button = true;
+                //MainScreenActivity.setFlashLightOff();
+
+            } else if (MainScreenActivity.check_button) {
+                Log.e("MainScreenActivity", "check_button: " + MainScreenActivity.check_button);
+                MainScreenActivity.check_button = false;
+
+                MainScreenActivity.setFlashLigthOn();
+            }
         }
     }
 }
