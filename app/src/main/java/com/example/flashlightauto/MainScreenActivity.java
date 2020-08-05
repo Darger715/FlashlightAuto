@@ -61,10 +61,11 @@ public class MainScreenActivity extends AppCompatActivity {
                 if (switch_on_off_button.isChecked() == true) {
                     Toast.makeText(MainScreenActivity.this, "OFF", Toast.LENGTH_SHORT).show();
                     button_on_off.setClickable(false);
-                    if(check_button){
-                    setFlashLightOff();
+                    if (check_button) {
+                        setFlashLightOff();
                         button_on_off.setBackgroundResource(R.drawable.flashlight_off);
-                    check_button = false;}
+                        check_button = false;
+                    }
                 } else {
                     Toast.makeText(MainScreenActivity.this, "ON", Toast.LENGTH_SHORT).show();
                     button_on_off.setClickable(true);
@@ -184,9 +185,9 @@ public class MainScreenActivity extends AppCompatActivity {
                 if (camera != null) {
 
 
-                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                        camera.setParameters(parameters);
-                        camera.stopPreview();
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    camera.setParameters(parameters);
+                    camera.stopPreview();
 
                 }
             }
