@@ -38,6 +38,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private BroadcastReceiver mReceiver = null;
 
 
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class MainScreenActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         button_on_off = findViewById(R.id.mainScreenActivity_button_flashlight);
         switch_on_off_button = findViewById(R.id.mainScreenActivity_switch_flashlight_on_off);
+        final boolean isCameraFlash = getApplicationContext().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
         // initialize receiver
         final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
@@ -58,10 +61,10 @@ public class MainScreenActivity extends AppCompatActivity {
         switch_on_off_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (switch_on_off_button.isChecked() == true) {
+                if (switch_on_off_button.isChecked()) {
                     Toast.makeText(MainScreenActivity.this, "OFF", Toast.LENGTH_SHORT).show();
                     button_on_off.setClickable(false);
-                    if (check_button) {
+                    if (isCameraFlash) {
                         setFlashLightOff();
                         button_on_off.setBackgroundResource(R.drawable.flashlight_off);
                         check_button = false;
@@ -96,8 +99,7 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-        boolean isCameraFlash = getApplicationContext().getPackageManager()
-                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+
 
         camera = Camera.open();
     }
@@ -122,9 +124,11 @@ public class MainScreenActivity extends AppCompatActivity {
         // only when screen turns on
         if (!check_button) {
             button_on_off.setBackgroundResource(R.drawable.flashlight_off);
+            check_button = false;
         }
         if (check_button) {
             button_on_off.setBackgroundResource(R.drawable.flashlight_on);
+            check_button = true;
         }
 
         if (!ScreenReceiver.wasScreenOn) {
